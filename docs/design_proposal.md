@@ -46,6 +46,15 @@ Generating audio samples conditioned on descriptive text captions
 
 ## References
 
+[1] Felix Kreuk, Gabriel Synnaeve, Adam Polyak, Uriel Singer, Alexandre D ́efossez, Jade Copet, Devi Parikh, Yaniv Taigman, and Yossi Adi. Audiogen: Textually guided audio generation, 2023. (https://arxiv.org/pdf/2301.11757.pdf ) 
+
+[2] Qingqing Huang, Daniel S. Park, Tao Wang, Timo I. Denk, Andy Ly, Nanxin Chen, Zhengdong Zhang, Zhishuai Zhang, Jiahui Yu, Christian Frank, Jesse Engel, Quoc V. Le, William Chan, Zhifeng Chen, and Wei Han. Noise2music: Text-conditioned music generation with diffusion models, 2023. (https://arxiv.org/pdf/2301.11325.pdf)
+
+[3] Qingqing Huang, Aren Jansen, Joonseok Lee, Ravi Ganti, Judith Yue Li, and Daniel P. W. Ellis. Mulan: A joint embedding of music audio and natural language, 2022. (https://arxiv.org/pdf/2302.03917.pdf )
+
+[4] Andrea Agostinelli, Timo I. Denk, Zal ́an Borsos, Jesse Engel, Mauro Verzetti, Antoine Caillon, Qingqing Huang, Aren Jansen, Adam Roberts, Marco Tagliasacchi, Matt Sharifi, Neil Zeghidour, and Christian Frank. Musiclm: Generating music from text, 2023. (https://arxiv.org/pdf/2208.12415.pdf )
+
+[5] Flavio Schneider, Ojasv Kamal, Zhijing Jin, and Bernhard Sch ̈olkopf. Moˆusai: Text-to-music generation with long-context latent diffusion, 2023. (https://arxiv.org/pdf/2209.15352.pdf )
 
 
-
+ 
