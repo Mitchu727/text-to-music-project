@@ -17,3 +17,6 @@ source env/bin/activate
 
 # Tests
 To run test use command:
+```
+pytest
+```
