@@ -5,9 +5,9 @@
 | AudioLDM2 | [arxiv](https://arxiv.org/abs/2308.05734) | [github](https://github.com/haoheliu/audioldm2) | ? | ? | ? |
 | AudioGen | [arxiv](https://arxiv.org/abs/2209.15352) | ? | ? | ? | ? |
 | Noise2Music | [arxiv](https://arxiv.org/pdf/2302.03917.pdf) | NOT PROVIDED | NO | Model parameters were chosen based on genarated results quality. Evaluation were conducted on 16kHz waveforms. To measure the quality of generation, authors used two kinds of metrics: the Frechet Audio Distance (FAD) and the MuLan similarity score. Metrics were calculated for these three datasets: MagnaTagATune (MTAT), AudioSet-Music-Eval and MusicCaps  | Inference time for 4 Google Cloud TPU V4 with GSPMD applied (to partition the model, time reduced by more than 50%) ~151s |
-| Mulan | [arxiv](https://arxiv.org/pdf/2208.12415.pdf) | ? | ? | ? | ? |
+| Mulan | [arxiv](https://arxiv.org/pdf/2208.12415.pdf) | NOT PROVIDED | NO | Paper was added as additional source for reaserch about shared embeddings between audio and text, therefore it probably won't be implemented by us | X |
 | MusicLm | [arxiv](https://arxiv.org/pdf/2301.11325.pdf) | ? | ? | ? | ? |
 | Moûsai | [arxiv](https://arxiv.org/pdf/2301.11757.pdf) | ? | ? | ? | ? |
-| JEN-1 | [arxiv](https://arxiv.org/abs/2308.04729) | ? | ? | ? | ? | ? |
+| JEN-1, JEN-1 COMPOSER (Preprints) | [arxiv](https://arxiv.org/abs/2308.04729) [arxiv](https://arxiv.org/abs/2310.19180) | NOT PROVIDED | No, but we should observe future developement because it achieves SOTA performance and authors may publish articles with code before our project ends | Objective evaluation includes three metrics: Frechet Audio Distance (FAD), Kullback-Leibler Divergence (KL) and CLAP score. Additionally perceptual evaluation was conducted, measuring two key aspects of generated music: text-to-music quality (T2M-QLT) and alignment to the text input (T2M-ALI). Both of them were rated in scale 1 to 100 by human raters. In case of COMPOSER authors used mixed CLAP score and Relative Preference Ratio (RPR) from human evaluation | 8 A100 GPUs for training for JEN-1 and 2 A100 for COMPOSER | 
 
 Furhtermore it is worth to observe this repo: https://github.com/archinetai/audio-ai-timeline
