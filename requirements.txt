@@ -3,4 +3,6 @@ pytest
 torch 
 torchvision 
 torchaudio
+gradio
+scipy
 git+https://github.com/huggingface/transformers.git
