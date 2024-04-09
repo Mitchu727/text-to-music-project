@@ -1,20 +1,22 @@
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
+import scipy
 
+def inference(model: str, text: list[str], out: str = "musicgen_out.wav", max_new_tokens: int = 256):
+    processor = AutoProcessor.from_pretrained(f"facebook/{model}")
+    model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model}")
 
-processor = AutoProcessor.from_pretrained("facebook/musicgen-large")
-model = MusicgenForConditionalGeneration.from_pretrained("facebook/musicgen-large")
-
-
-if __name__ == "__main__":
     inputs = processor(
-        text=["80s pop track with bassy drums and synth", "90s rock song with loud guitars and heavy drums"],
+        text=text,
         padding=True,
         return_tensors="pt",
     )
 
-    audio_values = model.generate(**inputs, max_new_tokens=256)
-
-    import scipy
+    audio_values = model.generate(**inputs, max_new_tokens=max_new_tokens)
 
     sampling_rate = model.config.audio_encoder.sampling_rate
-    scipy.io.wavfile.write("musicgen_out.wav", rate=sampling_rate, data=audio_values[0, 0].numpy())
+    scipy.io.wavfile.write(out, rate=sampling_rate, data=audio_values[0, 0].numpy())
+
+if __name__ == "__main__":
+    inference("musicgen-small", ["90s rock song with loud guitars and heavy drums"])
+
+    
