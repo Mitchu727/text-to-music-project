@@ -1,13 +1,23 @@
+from pathlib import Path
+
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
 import scipy
 
 from src.models.model_interface import ModelInterface
 
-class MusicGen(ModelInterface):
-    def __init__(self, model_name: str, out: str = "musicgen_out.wav"):
+class Musicgen(ModelInterface):
+    available_models: list[str] = [
+        "musicgen-small",
+        "musicgen-medium",
+        "musicgen-large",
+        "musicgen-melody",
+        "musicgen-melody-large"
+    ]
+
+    def __init__(self, model_name: str, output_filename: Path = "musicgen_out.wav"):
         self.processor = AutoProcessor.from_pretrained(f"facebook/{model_name}")
         self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_name}")
-        self.output_file_name = out
+        self.output_file_name = output_filename
 
     def generate(self, prompt: str, length_in_seconds: int):
         inputs = self.processor(

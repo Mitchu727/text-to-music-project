@@ -1,5 +1,5 @@
 import gradio as gr
-from src.models.musicgen import MusicGen
+from src.models.musicgen import Musicgen
 
 if __name__ == "__main__":
     models_variants_dict = {"musicgen": ["small", "medium", "large", "melody"]}
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     #  TODO to można wyrzucić do jakiejś klasy
     def inference(model: str, text: str, length: float):
         if "musicgen" in model:
-            musicgen = MusicGen(model)  # FIXME logika w interfejsie
+            musicgen = Musicgen(model)  # FIXME logika w interfejsie
             musicgen.generate(prompt=text, length_in_seconds=int(length))
             return "musicgen_out.wav"
 
