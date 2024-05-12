@@ -22,5 +22,5 @@ class AudioLDM(ModelInterface):
 
 
     def generate(self, prompt: str, length_in_seconds: int):
-        audio = self.pipe(prompt, num_inference_steps=10, audio_length_in_s=5.0).audios[0]
+        audio = self.pipe(prompt, num_inference_steps=10, audio_length_in_s=length_in_seconds).audios[0]
         scipy.io.wavfile.write(self.output_file_name, rate=16000, data=audio)
