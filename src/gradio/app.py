@@ -2,6 +2,7 @@ import gradio as gr
 
 from src.models.audio_ldm import AudioLDM
 from src.models.musicgen import Musicgen
+from src.models.mustango import MustangoInference
 
 
 def inference(model: str, model_variant: str, text: str, length: float):
@@ -13,6 +14,13 @@ def inference(model: str, model_variant: str, text: str, length: float):
         audio_ldm = AudioLDM(model_variant)
         audio_ldm.generate(prompt=text, length_in_seconds=int(length))
         return "audio_ldm_out.wav"
+    elif "mustango" in model:
+        mustango = MustangoInference(model)
+        mustango.generate(propt=text, lengt_in_seconds=int(length))
+        return "mustango_out.wav"
+    
+    else:
+        raise ValueError(f"Model {model} not supported")
 
 
 def change_variants_dropdown(model: str):
@@ -21,7 +29,8 @@ def change_variants_dropdown(model: str):
 
 models_variants_dict = {
     "musicgen": Musicgen.available_models,
-    "audioLDM": AudioLDM.available_models
+    "audioLDM": AudioLDM.available_models,
+    "mustango": MustangoInference.available_models,
 }
 
 if __name__ == "__main__":
