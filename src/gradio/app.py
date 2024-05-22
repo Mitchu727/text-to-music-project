@@ -1,15 +1,25 @@
 import gradio as gr
 from src.models.musicgen import MusicGen
-
+import librosa
 class MusicGenerationApp:
     def __init__(self):
         self.models_variants_dict = {"musicgen": ["small", "medium", "large", "melody"]}
 
     def generate_music(self, model: str, text: str, length: float, melody_file=None):
-        if "musicgen" in model:
-            musicgen = MusicGen(model)
-            musicgen.generate(prompt=text, length_in_seconds=int(length), melody_file=melody_file)
-            return "musicgen_out.wav"
+        try:
+            if "musicgen" in model:
+                musicgen = MusicGen(model)
+                melody_data = None
+                sr = None
+                if melody_file:
+
+                    melody_data, sr = librosa.load(melody_file.name, sr=None)
+                    print(f"Melody data shape: {melody_data.shape}, sample rate: {sr}")
+                output_file = musicgen.generate(prompt=text, length_in_seconds=int(length), melody=melody_data, sr=sr)
+                return output_file
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
 
     def get_model_variants(self):
         model_variants = []
