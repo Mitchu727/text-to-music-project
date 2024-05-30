@@ -15,6 +15,11 @@ class AudioLDM(ModelInterface):
         "audioldm-s-full-v2"
     ]
 
+    modifiable_parameters = {
+        "num_inference_steps": int,
+        "negative_prompt": str
+    }
+
     def __init__(self, model_name: str, output_filename: Path = "audio_ldm_out.wav"):
         self.pipe = AudioLDMPipeline.from_pretrained(f"cvssp/{model_name}", torch_dtype=torch.float16)
         self.pipe = self.pipe.to("cuda")
@@ -24,3 +29,5 @@ class AudioLDM(ModelInterface):
     def generate(self, prompt: str, length_in_seconds: int):
         audio = self.pipe(prompt, num_inference_steps=10, audio_length_in_s=length_in_seconds).audios[0]
         scipy.io.wavfile.write(self.output_file_name, rate=16000, data=audio)
+
+

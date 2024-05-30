@@ -14,6 +14,8 @@ class Musicgen(ModelInterface):
         "musicgen-melody-large"
     ]
 
+    modifiable_parameters = {}
+
     def __init__(self, model_name: str, output_filename: Path = "musicgen_out.wav"):
         self.processor = AutoProcessor.from_pretrained(f"facebook/{model_name}")
         self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_name}")

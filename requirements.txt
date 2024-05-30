@@ -7,3 +7,4 @@ gradio
 scipy
 git+https://github.com/huggingface/transformers.git
 audioldm
+diffusers
