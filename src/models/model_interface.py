@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
+
 class ModelInterface:
     @abstractmethod
-    def generate(self, prompt: str, length_in_seconds: int):
+    def generate(self, prompt: str, length_in_seconds: int, config):
         pass

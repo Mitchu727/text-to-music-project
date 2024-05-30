@@ -21,7 +21,7 @@ class Musicgen(ModelInterface):
         self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_name}")
         self.output_file_name = output_filename
 
-    def generate(self, prompt: str, length_in_seconds: int):
+    def generate(self, prompt: str, length_in_seconds: int, config={}):
         inputs = self.processor(
             text=[prompt],
             padding=True,
