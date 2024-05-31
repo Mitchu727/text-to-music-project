@@ -1,11 +1,11 @@
-from pathlib import Path
-
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
-import scipy
 
 from src.models.model_interface import ModelInterface
+from src.output.output_saver import OutputSaver
+
 
 class Musicgen(ModelInterface):
+    id: str = "musicgen"
     available_models: list[str] = [
         "musicgen-small",
         "musicgen-medium",
@@ -16,12 +16,13 @@ class Musicgen(ModelInterface):
 
     modifiable_parameters = {}
 
-    def __init__(self, model_name: str, output_filename: Path = "musicgen_out.wav"):
-        self.processor = AutoProcessor.from_pretrained(f"facebook/{model_name}")
-        self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_name}")
-        self.output_file_name = output_filename
+    def __init__(self, model_variant: str, output_saver: OutputSaver):
+        self.processor = AutoProcessor.from_pretrained(f"facebook/{model_variant}")
+        self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_variant}")
+        self.model_variant = model_variant
+        self.output_saver = output_saver
 
-    def generate(self, prompt: str, length_in_seconds: int, config={}):
+    def generate(self, prompt: str, length_in_seconds: int, config: dict = {}):
         inputs = self.processor(
             text=[prompt],
             padding=True,
@@ -32,4 +33,14 @@ class Musicgen(ModelInterface):
         audio_values = self.model.generate(**inputs, max_new_tokens=length_in_tokens)
 
         sampling_rate = self.model.config.audio_encoder.sampling_rate
-        scipy.io.wavfile.write(self.output_file_name, rate=sampling_rate, data=audio_values[0, 0].numpy())  # TODO jakiś ładny loader
+
+        audio_path = self.output_saver.save_generation(
+            audio=audio_values[0, 0].numpy(),
+            sampling_rate=sampling_rate,
+            prompt=prompt,
+            length_in_seconds=length_in_seconds,
+            model_name=self.id,
+            model_variant=self.model_variant,
+            config=config
+        )
+        return audio_path

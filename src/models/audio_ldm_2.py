@@ -1,21 +1,21 @@
-import torch
-from diffusers import AudioLDMPipeline
-
 from src.models.model_interface import ModelInterface
-from src.output.complex_output_saver import ComplexOutputSaver
+import torch
+from diffusers import AudioLDM2Pipeline
+
+from src.output.output_saver import OutputSaver
 
 
-class AudioLDM(ModelInterface):
-    id: str = "audioLDM"
+class AudioLDM2(ModelInterface):
+    id: str = "audioLDM2"
     available_models: list[str] = [
-        "audioldm",
-        "audioldm-m-full",
-        "audioldm-l-full",
-        "audioldm-s-full-v2"
+        "audioldm2",
+        "audioldm2-large",
+        "audioldm2-music"
     ]
 
-    def __init__(self, model_variant: str, output_saver: ComplexOutputSaver):
-        self.pipe = AudioLDMPipeline.from_pretrained(f"cvssp/{model_variant}", torch_dtype=torch.float16)
+    def __init__(self, model_variant: str, output_saver: OutputSaver):
+        repo_id = f"cvssp/{model_variant}"
+        self.pipe = AudioLDM2Pipeline.from_pretrained(repo_id, torch_dtype=torch.float16)
         self.pipe = self.pipe.to("cuda")
         self.output_saver = output_saver
         self.model_variant = model_variant
@@ -37,6 +37,4 @@ class AudioLDM(ModelInterface):
             config=config
         )
         return audio_path
-
-
 
