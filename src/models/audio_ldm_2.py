@@ -32,7 +32,7 @@ class AudioLDM2(ModelInterface):
             sampling_rate=16000,
             prompt=prompt,
             length_in_seconds=length_in_seconds,
-            model_name=self.id,
+            model_id=self.id,
             model_variant=self.model_variant,
             config=config
         )

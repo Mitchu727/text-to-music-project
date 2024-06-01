@@ -39,7 +39,7 @@ class Musicgen(ModelInterface):
             sampling_rate=sampling_rate,
             prompt=prompt,
             length_in_seconds=length_in_seconds,
-            model_name=self.id,
+            model_id=self.id,
             model_variant=self.model_variant,
             config=config
         )
