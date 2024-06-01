@@ -1,5 +1,4 @@
 import gradio as gr
-
 from functools import partial
 
 from src.gradio.output_loader import generate_data_for_dataset
@@ -9,16 +8,6 @@ from src.api import TextToMusicHub
 
 hub = TextToMusicHub()
 hub_wrapper = HubWrapper(hub = hub)
-
-# def inference(model_name: str, model_variant: str, text: str, length: float, *args):
-#     model = hub.create_model(model_name, model_variant)
-#     if model_name == "audioLDM":
-#         config = AudioLDMGradioWrapper.create_config_from_args(args)
-#     else:
-#         config = {}
-#     audio = model.generate(prompt=text, length_in_seconds=int(length), config=config)
-#     return audio
-
 
 def change_variants_dropdown(model: str):
     return gr.Dropdown(choices=hub.get_model(model).available_models, label="variant")

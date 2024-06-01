@@ -31,7 +31,6 @@ class Musicgen(ModelInterface):
         )
 
         length_in_tokens = int(length_in_seconds * 256 / 5)
-
         if config.get("melody_file") is not None:
             melody, sr = librosa.load(config["melody_file"], sr=None)
             if melody is not None and sr is not None:
@@ -43,11 +42,9 @@ class Musicgen(ModelInterface):
                     return_tensors="pt",
                 )
                 inputs.update(melody_inputs)
-
         audio_values = self.model.generate(**inputs, max_new_tokens=length_in_tokens)
 
         sampling_rate = self.model.config.audio_encoder.sampling_rate
-
         audio_path = self.output_saver.save_generation(
             audio=audio_values[0, 0].numpy(),
             sampling_rate=sampling_rate,
