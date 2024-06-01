@@ -13,7 +13,7 @@ class ComplexOutputSaver(OutputSaver):
         self.output_directory = output_directory
 
     def save_generation(self, audio, sampling_rate: int, prompt: str, length_in_seconds: int, model_id: str, model_variant: str, config: dict) -> Path:
-        generation_output_directory = self.output_directory / prompt
+        generation_output_directory = self.output_directory / prompt[:80]
         if not os.path.exists(generation_output_directory):
             os.makedirs(generation_output_directory)
 
@@ -26,7 +26,7 @@ class ComplexOutputSaver(OutputSaver):
         generation_parameters["model_id"] = model_id
         generation_parameters["model_variant"] = model_variant
         with open(generation_parameters_output_filename, "w") as f:
-            json.dump(generation_parameters, f)
+            json.dump(generation_parameters, f, indent=4)
         return audio_output_filename
 
     def _check_if_files_with_filename_can_be_saved(self, generation_output_directory: Path, filename: str) -> bool:
