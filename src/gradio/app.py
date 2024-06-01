@@ -3,24 +3,21 @@ import gradio as gr
 from functools import partial
 
 from src.gradio.output_loader import generate_data_for_dataset
-from src.gradio.wrappers.audio_ldm_gradio_wrapper import AudioLDMGradioWrapper
+from src.gradio.wrappers.hub_gradio_wrapper import HubWrapper
+from src.gradio.wrappers.models.audio_ldm_gradio_wrapper import AudioLDMGradioWrapper
 from src.api import TextToMusicHub
-import pandas as pd
-
-
-from src.utils import get_project_root
 
 hub = TextToMusicHub()
+hub_wrapper = HubWrapper(hub = hub)
 
-
-def inference(model_name: str, model_variant: str, text: str, length: float, *args):
-    model = hub.create_model(model_name, model_variant)
-    if model_name == "audioLDM":
-        config = AudioLDMGradioWrapper.create_config_from_args(args)
-    else:
-        config = {}
-    audio = model.generate(prompt=text, length_in_seconds=int(length), config=config)
-    return audio
+# def inference(model_name: str, model_variant: str, text: str, length: float, *args):
+#     model = hub.create_model(model_name, model_variant)
+#     if model_name == "audioLDM":
+#         config = AudioLDMGradioWrapper.create_config_from_args(args)
+#     else:
+#         config = {}
+#     audio = model.generate(prompt=text, length_in_seconds=int(length), config=config)
+#     return audio
 
 
 def change_variants_dropdown(model: str):
@@ -49,22 +46,22 @@ if __name__ == "__main__":
 
     with gr.Blocks() as demo:
         with gr.Tab("Generate music!"):
-            model_dropdown = gr.Dropdown(choices=hub.get_available_models(), label="model", value="musicgen")
+            default_model = "musicgen"
+            model_dropdown = gr.Dropdown(choices=hub.get_available_models(), label="model", value=default_model)
             variants_dropdown = gr.Dropdown(choices=hub.get_model(model_dropdown.value).available_models, label="variant")
 
             model_dropdown.change(change_variants_dropdown, inputs=model_dropdown, outputs=variants_dropdown)
 
-            audio_ldm_parameters = AudioLDMGradioWrapper.create_parameters_fields_not_visible()
-            model_dropdown.change(wrapped_change_parameters_list, inputs=model_dropdown, outputs=audio_ldm_parameters)
-
             input_text = gr.Textbox(value="80s pop track with bassy drums and synth", label="text description")
             length = gr.Slider(value=5, label="Length of the audio (in seconds)", minimum=2, maximum=60, step=1)
+            dynamic_parameters = hub_wrapper.make_parameters_for_model_visible(default_model)
+            model_dropdown.change(hub_wrapper.make_parameters_for_model_visible, inputs=model_dropdown, outputs=dynamic_parameters)
 
             run_button = gr.Button("Run")
 
             audio_output = gr.Audio()
 
-            run_button.click(inference, inputs=[model_dropdown, variants_dropdown, input_text, length, *audio_ldm_parameters], outputs=audio_output)
+            run_button.click(hub_wrapper.inference, inputs=[model_dropdown, variants_dropdown, input_text, length, *dynamic_parameters], outputs=audio_output)
 
         with gr.Tab("See previous generations"):
             dataset = gr.Dataset(

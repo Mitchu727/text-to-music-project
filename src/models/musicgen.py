@@ -1,3 +1,4 @@
+import librosa
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
 
 from src.models.model_interface import ModelInterface
@@ -30,6 +31,19 @@ class Musicgen(ModelInterface):
         )
 
         length_in_tokens = int(length_in_seconds * 256 / 5)
+
+        if config.get("melody_file") is not None:
+            melody, sr = librosa.load(config["melody_file"], sr=None)
+            if melody is not None and sr is not None:
+                melody_inputs = self.processor(
+                    text=[prompt],
+                    audio=melody,
+                    sampling_rate=sr,
+                    padding=True,
+                    return_tensors="pt",
+                )
+                inputs.update(melody_inputs)
+
         audio_values = self.model.generate(**inputs, max_new_tokens=length_in_tokens)
 
         sampling_rate = self.model.config.audio_encoder.sampling_rate
