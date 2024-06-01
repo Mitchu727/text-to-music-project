@@ -24,6 +24,16 @@ class HubWrapper:
                 dynamic_parameter_fields.extend(model_wrapper.create_parameters_fields_not_visible())
         return dynamic_parameter_fields
 
+    def display_generation_parameters(self, model_id, wav_path):
+        generation_parameter_fields = []
+        for model_wrapper in self.model_wrappers:
+            if model_id == model_wrapper.id:
+                generation_parameter_fields.extend(model_wrapper.display_generation_parameters(wav_path))
+            else:
+                generation_parameter_fields.extend(model_wrapper.create_parameters_fields_not_visible())
+        return generation_parameter_fields
+
+
     def inference(self, model_id: str, model_variant: str, text: str, length: float, *args):
         model = self.hub.create_model(model_id, model_variant)
         config = self.create_config_from_args(model_id, args)

@@ -1,6 +1,9 @@
+import json
+from pathlib import Path
+
 from src.models.musicgen import Musicgen
 import gradio as gr
-import librosa
+
 
 class MusicGenGradioWrapper:
     id: str = Musicgen.id
@@ -24,3 +27,16 @@ class MusicGenGradioWrapper:
             }
         else:
             return {}
+
+    @staticmethod
+    def display_generation_parameters(wav_path):
+        json_path = Path(wav_path).with_suffix(".json")
+
+        with open(json_path, "r") as f:
+            parameters = json.load(f)
+        if parameters.get("melody_file") is not None:
+            melody_audio_file = gr.File(label="Melody file", value=parameters["melody_file"], interactive=False, visible=True)
+        else:
+            melody_audio_file = gr.File(label="Melody file", visible=False)
+
+        return [melody_audio_file]

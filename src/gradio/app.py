@@ -31,13 +31,17 @@ def change_parameters_list(model:str, audioLDMWrapper):
         return audioLDMWrapper.create_parameters_fields_not_visible()
 
 
-def load_audio(dataset_values):
-    return dataset_values[3]
+def load_audio(dataset_row):
+    return dataset_row[3]
 
 
 def reload_dataset():
     samples = generate_data_for_dataset()
     return gr.update(samples=samples)
+
+
+def display_generation_parameters(dataset_row):
+    return hub_wrapper.display_generation_parameters(dataset_row[0], dataset_row[3])
 
 
 if __name__ == "__main__":
@@ -71,6 +75,8 @@ if __name__ == "__main__":
             )
             gr.Button("Refresh").click(reload_dataset, outputs=dataset)
             saved_audio_output = gr.Audio()
+            displayed_parameters = hub_wrapper.make_parameters_for_model_visible("None")
             dataset.click(load_audio, inputs=dataset, outputs=saved_audio_output)
+            dataset.click(display_generation_parameters, inputs=dataset, outputs=displayed_parameters)
 
         demo.launch()
