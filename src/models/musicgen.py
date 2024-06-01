@@ -1,16 +1,29 @@
 import librosa
-import numpy as np
-from transformers import AutoProcessor
-from transformers.models.musicgen.modeling_musicgen import MusicgenForConditionalGeneration
-import scipy.io.wavfile
+from transformers import AutoProcessor, MusicgenForConditionalGeneration
 
-class MusicGen:
-    def __init__(self, model_name: str, out: str = "musicgen_out.wav"):
-        self.processor = AutoProcessor.from_pretrained(f"facebook/{model_name}")
-        self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_name}")
-        self.output_file_name = out
+from src.models.model_interface import ModelInterface
+from src.output.output_saver import OutputSaver
 
-    def generate(self, prompt: str, length_in_seconds: int, melody: np.ndarray = None, sr: int = None):
+
+class Musicgen(ModelInterface):
+    id: str = "musicgen"
+    available_models: list[str] = [
+        "musicgen-small",
+        "musicgen-medium",
+        "musicgen-large",
+        "musicgen-melody",
+        "musicgen-melody-large"
+    ]
+
+    modifiable_parameters = {}
+
+    def __init__(self, model_variant: str, output_saver: OutputSaver):
+        self.processor = AutoProcessor.from_pretrained(f"facebook/{model_variant}")
+        self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_variant}")
+        self.model_variant = model_variant
+        self.output_saver = output_saver
+
+    def generate(self, prompt: str, length_in_seconds: int, config: dict = {}):
         inputs = self.processor(
             text=[prompt],
             padding=True,
@@ -18,20 +31,27 @@ class MusicGen:
         )
 
         length_in_tokens = int(length_in_seconds * 256 / 5)
-
-        if melody is not None and sr is not None:
-            melody_inputs = self.processor(
-                text=[prompt],
-                audio=melody,
-                sampling_rate=sr,
-                padding=True,
-                return_tensors="pt",
-            )
-            inputs.update(melody_inputs)
-
+        if config.get("melody_file") is not None:
+            melody, sr = librosa.load(config["melody_file"], sr=None)
+            if melody is not None and sr is not None:
+                melody_inputs = self.processor(
+                    text=[prompt],
+                    audio=melody,
+                    sampling_rate=sr,
+                    padding=True,
+                    return_tensors="pt",
+                )
+                inputs.update(melody_inputs)
         audio_values = self.model.generate(**inputs, max_new_tokens=length_in_tokens)
 
         sampling_rate = self.model.config.audio_encoder.sampling_rate
-        scipy.io.wavfile.write(self.output_file_name, rate=sampling_rate, data=audio_values[0, 0].numpy())
-
-        return self.output_file_name
+        audio_path = self.output_saver.save_generation(
+            audio=audio_values[0, 0].numpy(),
+            sampling_rate=sampling_rate,
+            prompt=prompt,
+            length_in_seconds=length_in_seconds,
+            model_id=self.id,
+            model_variant=self.model_variant,
+            config=config
+        )
+        return audio_path

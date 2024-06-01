@@ -1,53 +1,71 @@
 import gradio as gr
-from src.models.musicgen import MusicGen
-import librosa
-class MusicGenerationApp:
-    def __init__(self):
-        self.models_variants_dict = {"musicgen": ["small", "medium", "large", "melody"]}
+from functools import partial
 
-    def generate_music(self, model: str, text: str, length: float, melody_file=None):
-        try:
-            if "musicgen" in model:
-                musicgen = MusicGen(model)
-                melody_data = None
-                sr = None
-                if melody_file:
+from src.gradio.output_loader import generate_data_for_dataset
+from src.gradio.wrappers.hub_gradio_wrapper import HubWrapper
+from src.gradio.wrappers.models.audio_ldm_gradio_wrapper import AudioLDMGradioWrapper
+from src.api import TextToMusicHub
 
-                    melody_data, sr = librosa.load(melody_file.name, sr=None)
-                    print(f"Melody data shape: {melody_data.shape}, sample rate: {sr}")
-                output_file = musicgen.generate(prompt=text, length_in_seconds=int(length), melody=melody_data, sr=sr)
-                return output_file
-        except Exception as e:
-            print(f"Error: {e}")
-            return None
+hub = TextToMusicHub()
+hub_wrapper = HubWrapper(hub = hub)
 
-    def get_model_variants(self):
-        model_variants = []
-        for model, variants in self.models_variants_dict.items():
-            for variant in variants:
-                model_variants.append(f"{model}-{variant}")
-        return model_variants
+def change_variants_dropdown(model: str):
+    return gr.Dropdown(choices=hub.get_model(model).available_models, label="variant")
 
-class GradioInterface:
-    def __init__(self, app):
-        self.app = app
 
-    def launch_interface(self):
-        model_variants = self.app.get_model_variants()
-        model_dropdown = gr.Dropdown(model_variants, label="Model")
-        input_text = gr.Textbox(value="80s pop track with bassy drums and synth", label="Text Description")
-        length = gr.Number(value=5, label="Length of the Audio (in seconds)")
-        melody_upload = gr.File(label="Upload Melody File (Optional)")
+def change_parameters_list(model:str, audioLDMWrapper):
+    if model == "audioLDM":
+        return audioLDMWrapper.create_parameters_fields_visible()
+    else:
+        return audioLDMWrapper.create_parameters_fields_not_visible()
 
-        app_interface = gr.Interface(
-            fn=self.app.generate_music,
-            inputs=[model_dropdown, input_text, length, melody_upload],
-            outputs="audio",
-        )
 
-        app_interface.launch()
+def load_audio(dataset_row):
+    return dataset_row[3]
+
+
+def reload_dataset():
+    samples = generate_data_for_dataset()
+    return gr.update(samples=samples)
+
+
+def display_generation_parameters(dataset_row):
+    return hub_wrapper.display_generation_parameters(dataset_row[0], dataset_row[3])
+
 
 if __name__ == "__main__":
-    music_app = MusicGenerationApp()
-    interface = GradioInterface(music_app)
-    interface.launch_interface()
+    wrapped_change_parameters_list = partial(change_parameters_list, audioLDMWrapper=AudioLDMGradioWrapper)
+    samples = generate_data_for_dataset()
+
+    with gr.Blocks() as demo:
+        with gr.Tab("Generate music!"):
+            default_model = "musicgen"
+            model_dropdown = gr.Dropdown(choices=hub.get_available_models(), label="model", value=default_model)
+            variants_dropdown = gr.Dropdown(choices=hub.get_model(model_dropdown.value).available_models, label="variant")
+
+            model_dropdown.change(change_variants_dropdown, inputs=model_dropdown, outputs=variants_dropdown)
+
+            input_text = gr.Textbox(value="80s pop track with bassy drums and synth", label="text description")
+            length = gr.Slider(value=5, label="Length of the audio (in seconds)", minimum=2, maximum=60, step=1)
+            dynamic_parameters = hub_wrapper.make_parameters_for_model_visible(default_model)
+            model_dropdown.change(hub_wrapper.make_parameters_for_model_visible, inputs=model_dropdown, outputs=dynamic_parameters)
+
+            run_button = gr.Button("Run")
+
+            audio_output = gr.Audio()
+
+            run_button.click(hub_wrapper.inference, inputs=[model_dropdown, variants_dropdown, input_text, length, *dynamic_parameters], outputs=audio_output)
+
+        with gr.Tab("See previous generations"):
+            dataset = gr.Dataset(
+                components=["textbox", "textbox", "textbox", "textbox", "number"],
+                headers=["Model id", "Model variant", "Prompt", "Generated audio path", "Length"],
+                samples=samples
+            )
+            gr.Button("Refresh").click(reload_dataset, outputs=dataset)
+            saved_audio_output = gr.Audio()
+            displayed_parameters = hub_wrapper.make_parameters_for_model_visible("None")
+            dataset.click(load_audio, inputs=dataset, outputs=saved_audio_output)
+            dataset.click(display_generation_parameters, inputs=dataset, outputs=displayed_parameters)
+
+        demo.launch()
