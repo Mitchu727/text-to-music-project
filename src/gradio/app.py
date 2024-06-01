@@ -34,15 +34,18 @@ def change_parameters_list(model:str, audioLDMWrapper):
         return audioLDMWrapper.create_parameters_fields_not_visible()
 
 
-samples = generate_data_for_dataset()
-
-
 def load_audio(dataset_values):
     return dataset_values[3]
 
 
+def reload_dataset():
+    samples = generate_data_for_dataset()
+    return gr.update(samples=samples)
+
+
 if __name__ == "__main__":
     wrapped_change_parameters_list = partial(change_parameters_list, audioLDMWrapper=AudioLDMGradioWrapper)
+    samples = generate_data_for_dataset()
 
     with gr.Blocks() as demo:
         with gr.Tab("Generate music!"):
@@ -69,6 +72,7 @@ if __name__ == "__main__":
                 headers=["Model id", "Model variant", "Prompt", "Generated audio path", "Length"],
                 samples=samples
             )
+            gr.Button("Refresh").click(reload_dataset, outputs=dataset)
             saved_audio_output = gr.Audio()
             dataset.click(load_audio, inputs=dataset, outputs=saved_audio_output)
 

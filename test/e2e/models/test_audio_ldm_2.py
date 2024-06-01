@@ -12,7 +12,7 @@ output_saver = SimpleOutputSaver(output_test_directory())
 
 
 @pytest.mark.parametrize("model_variant", AudioLDM2.available_models)
-def test_audioldm(model_variant, clean_outputs):
+def test_audioldm_2(model_variant, clean_outputs):
     output_file_name = output_test_directory() / f"{model_variant}.wav"
     audio_ldm = AudioLDM2(model_variant, output_saver=output_saver)
     audio_ldm.generate(prompt=text, length_in_seconds=length)

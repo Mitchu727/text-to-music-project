@@ -1,5 +1,6 @@
 from src.models.audio_ldm import AudioLDM
 from src.models.model_interface import ModelInterface
+from src.models.music_ldm import MusicLDM
 from src.models.musicgen import Musicgen
 from src.models.audio_ldm_2 import AudioLDM2
 from src.output.output_saver import OutputSaver
@@ -9,7 +10,8 @@ class TextToMusicHub:
     models: list[ModelInterface] = [
         AudioLDM,
         Musicgen,
-        AudioLDM2
+        AudioLDM2,
+        MusicLDM
     ]
 
     def __init__(self, output_saver: OutputSaver = ComplexOutputSaver()):
