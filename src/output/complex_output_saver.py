@@ -20,7 +20,7 @@ class ComplexOutputSaver(OutputSaver):
         audio_output_filename, generation_parameters_output_filename = self._create_output_paths(generation_output_directory, model_id, model_variant)
         scipy.io.wavfile.write(audio_output_filename, rate=sampling_rate, data=audio)
 
-        generation_parameters = config
+        generation_parameters = config.copy()
         generation_parameters["prompt"] = prompt
         generation_parameters["length_in_seconds"] = length_in_seconds
         generation_parameters["model_id"] = model_id
