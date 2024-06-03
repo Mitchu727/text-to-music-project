@@ -4,7 +4,7 @@ from functools import partial
 from src.gradio.output_loader import generate_data_for_dataset
 from src.gradio.wrappers.hub_gradio_wrapper import HubWrapper
 from src.gradio.wrappers.models.audio_ldm_gradio_wrapper import AudioLDMGradioWrapper
-from src.api import TextToMusicHub
+from src.hub import TextToMusicHub
 
 hub = TextToMusicHub()
 hub_wrapper = HubWrapper(hub=hub)
