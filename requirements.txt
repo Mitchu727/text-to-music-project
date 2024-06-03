@@ -8,6 +8,3 @@ git+https://github.com/huggingface/transformers.git
 ipykernel
 scipy==1.11.3
 mkdocstrings
-freeze
-pdoc3
-sphinx
