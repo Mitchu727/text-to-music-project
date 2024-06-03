@@ -38,9 +38,9 @@ python -m src.generate --model audioLDM --variant audioldm-m-full --prompts conf
 ```
 
 # Evaluation
-For evaluation purposes we used Microsoft's library for Frechet Audio Distance (FAD) calculation - fadtk.
+For evaluation purposes we used Microsoft's library for Frechet Audio Distance (FAD) calculation - [fadtk](https://github.com/microsoft/fadtk).
 
 Interactive way of calculating FAD with additional plots and low probability recordings is available via fad_evaluation.ipynb notebook
 
 ## MusicCaps 
-To download MusicCaps dataset for evaluation purposes, please reffer to [music_caps_dl](https://github.com/seungheondoh/music_caps_dl?tab=readme-ov-file)
+To download MusicCaps dataset for evaluation purposes, please reffer to [music_caps_dl](https://github.com/seungheondoh/music_caps_dl)
