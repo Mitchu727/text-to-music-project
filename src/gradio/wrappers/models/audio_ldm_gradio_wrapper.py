@@ -2,15 +2,12 @@ from pathlib import Path
 
 import gradio as gr
 
+from src.gradio.wrappers.models.model_gradio_wrapper_interface import ModelGradioWrapperInterface
 from src.models.audio_ldm import AudioLDM
 import json
 
-# TODO
-# usunąć deduplikację
-# dodać interfejs
-# Wyświeltać audio dla musicgen'a
 
-class AudioLDMGradioWrapper:
+class AudioLDMGradioWrapper(ModelGradioWrapperInterface):
     id: str = AudioLDM.id
 
     @staticmethod
@@ -41,8 +38,6 @@ class AudioLDMGradioWrapper:
             negative_prompt = gr.Textbox(label="Negative prompt", visible=False)
         guidance_scale = gr.Number(label="Guidance scale", value=parameters["guidance_scale"], interactive=False, visible=True)
         return [num_inference_steps, negative_prompt, guidance_scale]
-
-
 
     @staticmethod
     def create_config_from_args(args):

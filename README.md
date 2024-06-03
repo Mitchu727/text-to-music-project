@@ -5,7 +5,7 @@ The design proposal is stored in [docs](docs) folder.
 
 # Installation
 ## Creating env
-To create virtual environment, activate it and install neccasary dependiencies run:
+To create virtual environment, activate it and install necessary dependiencies run:
 ```
 python -m venv env
 source env/bin/activate
@@ -31,11 +31,20 @@ python -m src.gradio.app
 # Generating audio
 We provide additional script generate.py for generating audio for specific model based on given promt or promts.
 
-Example usage:
+Example usage CLI:
 ```
 python -m src.generate --model musicgen --variant musicgen-small --prompt 'The mood of this song is relaxing. This song can be played in a spa'
 python -m src.generate --model audioLDM --variant audioldm-m-full --prompts configs/musiccaps-prompts.txt
 ```
+
+
+Example usage API:
+```python
+hub = TextToMusicHub()
+length = 5
+text = "80s pop track with bassy drums and synth"
+model = hub.create_model("audioLDM2", "audioldm2-music")
+model.generate(prompt=text, length_in_seconds=length)
 
 # Evaluation
 For evaluation purposes we used Microsoft's library for Frechet Audio Distance (FAD) calculation - [fadtk](https://github.com/microsoft/fadtk).
@@ -44,3 +53,4 @@ Interactive way of calculating FAD with additional plots and low probability rec
 
 ## MusicCaps 
 To download MusicCaps dataset for evaluation purposes, please reffer to [music_caps_dl](https://github.com/seungheondoh/music_caps_dl)
+
