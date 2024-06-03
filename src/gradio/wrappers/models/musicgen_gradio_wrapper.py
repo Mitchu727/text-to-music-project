@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
 
+from src.gradio.wrappers.models.model_gradio_wrapper_interface import ModelGradioWrapperInterface
 from src.models.musicgen import Musicgen
 import gradio as gr
 
 
-class MusicGenGradioWrapper:
+class MusicGenGradioWrapper(ModelGradioWrapperInterface):
     id: str = Musicgen.id
 
     @staticmethod

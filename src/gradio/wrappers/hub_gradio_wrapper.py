@@ -1,11 +1,12 @@
 from src.gradio.wrappers.models.audio_ldm_2_gradio_wrapper import AudioLDM2GradioWrapper
 from src.gradio.wrappers.models.audio_ldm_gradio_wrapper import AudioLDMGradioWrapper
+from src.gradio.wrappers.models.model_gradio_wrapper_interface import ModelGradioWrapperInterface
 from src.gradio.wrappers.models.music_ldm_gradio_wrapper import MusicLDMGradioWrapper
 from src.gradio.wrappers.models.musicgen_gradio_wrapper import MusicGenGradioWrapper
 
 
 class HubWrapper:
-    model_wrappers = [AudioLDMGradioWrapper, AudioLDM2GradioWrapper, MusicLDMGradioWrapper, MusicGenGradioWrapper]
+    model_wrappers: list[ModelGradioWrapperInterface] = [AudioLDMGradioWrapper, AudioLDM2GradioWrapper, MusicLDMGradioWrapper, MusicGenGradioWrapper]
 
     def __init__(self, hub):
         self.hub = hub
@@ -32,7 +33,6 @@ class HubWrapper:
             else:
                 generation_parameter_fields.extend(model_wrapper.create_parameters_fields_not_visible())
         return generation_parameter_fields
-
 
     def inference(self, model_id: str, model_variant: str, text: str, length: float, *args):
         model = self.hub.create_model(model_id, model_variant)

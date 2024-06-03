@@ -7,7 +7,8 @@ from src.gradio.wrappers.models.audio_ldm_gradio_wrapper import AudioLDMGradioWr
 from src.api import TextToMusicHub
 
 hub = TextToMusicHub()
-hub_wrapper = HubWrapper(hub = hub)
+hub_wrapper = HubWrapper(hub=hub)
+
 
 def change_variants_dropdown(model: str):
     return gr.Dropdown(choices=hub.get_model(model).available_models, label="variant")

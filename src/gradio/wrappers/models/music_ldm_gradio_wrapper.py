@@ -2,10 +2,12 @@ import json
 from pathlib import Path
 
 import gradio as gr
+
+from src.gradio.wrappers.models.model_gradio_wrapper_interface import ModelGradioWrapperInterface
 from src.models.music_ldm import MusicLDM
 
 
-class MusicLDMGradioWrapper:
+class MusicLDMGradioWrapper(ModelGradioWrapperInterface):
     id: str = MusicLDM.id
 
     @staticmethod
@@ -21,7 +23,6 @@ class MusicLDMGradioWrapper:
         negative_prompt = gr.Textbox(label="Negative prompt", value=None, interactive=True, visible=True)
         guidance_scale = gr.Number(label="Guidance scale", value=2.5, interactive=True, visible=True)
         return [num_inference_steps, negative_prompt, guidance_scale]
-
 
     @staticmethod
     def display_generation_parameters(wav_path):
@@ -40,7 +41,6 @@ class MusicLDMGradioWrapper:
         guidance_scale = gr.Number(label="Guidance scale", value=parameters["guidance_scale"], interactive=False,
                                    visible=True)
         return [num_inference_steps, negative_prompt, guidance_scale]
-
 
     @staticmethod
     def create_config_from_args(args):

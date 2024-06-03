@@ -3,10 +3,11 @@ from pathlib import Path
 
 import gradio as gr
 
+from src.gradio.wrappers.models.model_gradio_wrapper_interface import ModelGradioWrapperInterface
 from src.models.audio_ldm_2 import AudioLDM2
 
 
-class AudioLDM2GradioWrapper:
+class AudioLDM2GradioWrapper(ModelGradioWrapperInterface):
     id: str = AudioLDM2.id
 
     @staticmethod
@@ -40,7 +41,6 @@ class AudioLDM2GradioWrapper:
         guidance_scale = gr.Number(label="Guidance scale", value=parameters["guidance_scale"], interactive=False,
                                    visible=True)
         return [num_inference_steps, negative_prompt, guidance_scale]
-
 
     @staticmethod
     def create_config_from_args(args):
