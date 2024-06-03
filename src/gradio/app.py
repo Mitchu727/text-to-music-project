@@ -11,10 +11,17 @@ hub_wrapper = HubWrapper(hub=hub)
 
 
 def change_variants_dropdown(model: str):
+    """
+        Updates the dropdown choices for model variants based on the selected model.
+        """
     return gr.Dropdown(choices=hub.get_model(model).available_models, label="variant")
 
 
 def change_parameters_list(model:str, audioLDMWrapper):
+    """
+        Changes the visibility of parameter fields based on the selected model.
+        If the model is 'audioLDM', the fields are made visible; otherwise, they are hidden.
+        """
     if model == "audioLDM":
         return audioLDMWrapper.create_parameters_fields_visible()
     else:
@@ -22,15 +29,24 @@ def change_parameters_list(model:str, audioLDMWrapper):
 
 
 def load_audio(dataset_row):
+    """
+        Loads the audio file path from the selected dataset row.
+        """
     return dataset_row[3]
 
 
 def reload_dataset():
+    """
+        Reloads the dataset with new samples.
+        """
     samples = generate_data_for_dataset()
     return gr.update(samples=samples)
 
 
 def display_generation_parameters(dataset_row):
+    """
+        Displays the generation parameters for the selected dataset row.
+        """
     return hub_wrapper.display_generation_parameters(dataset_row[0], dataset_row[3])
 
 

@@ -9,6 +9,9 @@ import json
 
 
 class ComplexOutputSaver(OutputSaver):
+    """
+        Class to handle saving generated audio and associated parameters to the filesystem.
+        """
     def __init__(self, output_directory=get_project_root() / "outputs"):
         self.output_directory = output_directory
 

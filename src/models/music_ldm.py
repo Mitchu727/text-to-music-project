@@ -6,6 +6,10 @@ from src.output.output_saver import OutputSaver
 
 
 class MusicLDM(ModelInterface):
+    """
+        Implementation of the ModelInterface for the MusicLDM.
+
+        """
     id: str = "musicLDM"
     available_models: list[str] = [
         "musicldm"

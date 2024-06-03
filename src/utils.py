@@ -3,9 +3,15 @@ import csv
 import random
 
 def get_project_root() -> Path:
+    """
+        Returns the root directory of the project as a Path object.
+        """
     return Path(__file__).parent.parent
 
 def extract_musiccaps_prompts(musiccas_csv: Path, num : int = 100, randomize: bool = True, out: Path = None) -> list[str]:
+    """
+        Extracts prompts from a MusicCaps CSV file.
+    """
     promts = []
 
     # extract prompts

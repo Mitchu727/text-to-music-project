@@ -4,6 +4,9 @@ import scipy
 
 
 class SimpleOutputSaver(OutputSaver):
+    """
+        A simple implementation of the OutputSaver class for saving generated audio outputs.
+        """
     def __init__(self, output_directory=get_project_root() / "outputs"):
         self.output_directory = output_directory
 
