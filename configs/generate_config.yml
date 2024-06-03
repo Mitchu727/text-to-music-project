@@ -1,0 +1,17 @@
+audioLDM:
+    num_inference_steps: 10
+    negative_prompt: null
+    guidance_scale: 2.5
+
+musicgen:
+    melody_file: null
+    
+audioLDM2:
+    num_inference_steps: 10
+    negative_prompt: null
+    guidance_scale: 2.5
+
+musicLDM:
+    num_inference_steps: 10
+    negative_prompt: null
+    guidance_scale: 2.5
