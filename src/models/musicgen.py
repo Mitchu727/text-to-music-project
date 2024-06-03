@@ -19,7 +19,7 @@ class Musicgen(ModelInterface):
 
     def __init__(self, model_variant: str, output_saver: OutputSaver):
         self.processor = AutoProcessor.from_pretrained(f"facebook/{model_variant}")
-        self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_variant}")
+        self.model = MusicgenForConditionalGeneration.from_pretrained(f"facebook/{model_variant}").half().to('cuda')
         self.model_variant = model_variant
         self.output_saver = output_saver
 
@@ -42,7 +42,8 @@ class Musicgen(ModelInterface):
                     return_tensors="pt",
                 )
                 inputs.update(melody_inputs)
-        audio_values = self.model.generate(**inputs, max_new_tokens=length_in_tokens)
+        inputs = inputs.to('cuda')
+        audio_values = self.model.generate(**inputs, max_new_tokens=length_in_tokens).cpu().float()
 
         sampling_rate = self.model.config.audio_encoder.sampling_rate
         audio_path = self.output_saver.save_generation(
