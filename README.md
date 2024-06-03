@@ -5,7 +5,7 @@ The design proposal is stored in [docs](docs) folder.
 
 # Installation
 ## Creating env
-To create virtual environment, activate it and install necessary dependiencies run:
+To create virtual environment, activate it and install necessary dependencies run:
 ```
 python -m venv env
 source env/bin/activate
@@ -29,7 +29,7 @@ python -m src.gradio.app
 ```
 
 # Generating audio
-We provide additional script generate.py for generating audio for specific model based on given promt or promts.
+We provide additional script generate.py for generating audio for specific model based on given prompt or prompts.
 
 Example usage CLI:
 ```

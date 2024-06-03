@@ -8,6 +8,9 @@ from src.output.complex_output_saver import ComplexOutputSaver
 
 
 class TextToMusicHub:
+    """
+       Class representing a hub for managing different text-to-music models.
+       """
     models: list[ModelInterface] = [
         AudioLDM,
         Musicgen,

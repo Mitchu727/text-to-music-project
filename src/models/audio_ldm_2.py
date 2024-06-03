@@ -6,6 +6,10 @@ from src.output.output_saver import OutputSaver
 
 
 class AudioLDM2(ModelInterface):
+    """
+        Implementation of the ModelInterface for the AudioLDM 2.
+
+        """
     id: str = "audioLDM2"
     available_models: list[str] = [
         "audioldm2",

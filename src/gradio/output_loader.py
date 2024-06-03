@@ -5,6 +5,10 @@ from src.utils import get_project_root
 
 
 def generate_data_for_dataset():
+    """
+        Generates dataset samples by traversing through JSON files in the 'outputs' directory and collecting relevant information.
+        Each sample includes model ID, model variant, prompt, generated audio path, and length in seconds.
+        """
     path = get_project_root() / "outputs"
     path_list = Path(path).rglob("*.json")
     samples = []

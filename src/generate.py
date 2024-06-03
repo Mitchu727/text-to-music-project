@@ -8,6 +8,9 @@ from tqdm import tqdm
 
 
 def main(ar=None):
+    """
+        Main function to generate audio from text prompts using specified models and configurations.
+        """
     args = get_args(ar)
 
     with open(args.config, 'r') as file:
@@ -31,12 +34,18 @@ def main(ar=None):
     return
 
 class RawFormatter(HelpFormatter):
+    """
+        Custom formatter class for argument parser help messages to maintain text formatting.
+        """
     def _fill_text(self, text, width, indent):
         return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
     
 
 def get_args(args=None):
-    
+    """
+        Parses command-line arguments for the script.
+        Returns a namespace with parsed arguments.
+        """
 
     epilog = f'''
 Example usage: 

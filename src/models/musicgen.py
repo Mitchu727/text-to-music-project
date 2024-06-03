@@ -6,6 +6,10 @@ from src.output.output_saver import OutputSaver
 
 
 class Musicgen(ModelInterface):
+    """
+        Implementation of the ModelInterface for the Musicgen.
+
+        """
     id: str = "musicgen"
     available_models: list[str] = [
         "musicgen-small",
